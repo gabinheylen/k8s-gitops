@@ -1,0 +1,16 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-vaultwarden
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "false"
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+parameters:
+  numberOfReplicas: "2"              # Réplication pour haute disponibilité
+  staleReplicaTimeout: "2880"        # 48h
+  fromBackup: ""
+  fsType: "ext4"
+  dataLocality: "best-effort"        # Meilleure performance
+reclaimPolicy: Retain                # NE JAMAIS supprimer les données automatiquement
+volumeBindingMode: Immediate

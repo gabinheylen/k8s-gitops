@@ -1,17 +1,162 @@
-replicaCount: 1
+# Configuration Vaultwarden pour environnement d'entreprise
+# Documentation: https://github.com/dani-garcia/vaultwarden/wiki
+
+domain: "http://localhost:8080"  # À changer pour production avec HTTPS
 
 image:
+  registry: docker.io
   repository: vaultwarden/server
-  tag: latest
+  tag: 1.30.5-alpine  # Version spécifique = reproductible
   pullPolicy: IfNotPresent
 
-env:
-  DOMAIN: "https://vaultwarden.example.com"
-  SIGNUPS_ALLOWED: "false"
-  WEBSOCKET_ENABLED: "true"
+# STRATÉGIE DE DÉPLOIEMENT - Important pour éviter downtime
+strategy:
+  type: Recreate  # Pas de rolling update pour éviter corruption DB
+                  # Un seul pod à la fois peut écrire dans la DB SQLite
 
-persistence:
+# RESSOURCES - Ajustez selon votre charge
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# PERSISTENCE - CRITIQUE POUR NE PAS PERDRE DE DONNÉES
+data:
   enabled: true
-  size: 5Gi
-  storageClass: longhorn
+  storageClass: "longhorn-vaultwarden"  # Utilise notre StorageClass
+  size: 10Gi
   accessMode: ReadWriteOnce
+  
+  # IMPORTANT: Labels pour identifier facilement le PVC
+  labels:
+    app: vaultwarden
+    component: database
+  
+  # Annotations pour Longhorn
+  annotations:
+    # Backup automatique avec Longhorn (optionnel)
+    recurring-job.longhorn.io/source: enabled
+    recurring-job.longhorn.io/backup: enabled
+
+# CONFIGURATION VAULTWARDEN
+vaultwarden:
+  # Base de données - SQLite par défaut (suffisant jusqu'à ~100 utilisateurs)
+  # Pour plus, considérez PostgreSQL
+  database:
+    type: default  # SQLite
+    wal: true      # Write-Ahead Logging = meilleure performance et sécurité
+  
+  # SÉCURITÉ
+  signupsAllowed: false          # Désactiver inscriptions publiques
+  invitationsAllowed: true       # Seulement par invitation
+  signupsDomainsWhitelist: ""    # Optionnel: limiter à certains domaines email
+  signupsVerify: true            # Vérification email obligatoire
+  
+  showPasswordHint: false        # Ne pas afficher les indices de mot de passe
+  
+  # Admin
+  adminToken:
+    existingSecret: "vaultwarden-admin"  # À créer (voir plus bas)
+    existingSecretKey: "token"
+  
+  # SMTP - Pour envoi emails (invitations, 2FA, etc.)
+  # À configurer selon votre fournisseur
+  smtp:
+    enabled: false  # À activer en production
+    # host: smtp.gmail.com
+    # security: starttls
+    # port: 587
+    # from: vaultwarden@votredomaine.com
+    # username:
+    #   existingSecret: "vaultwarden-smtp"
+    #   existingSecretKey: "username"
+    # password:
+    #   existingSecret: "vaultwarden-smtp"
+    #   existingSecretKey: "password"
+  
+  # LOGS
+  log:
+    level: info  # info, debug, trace
+    file: ""     # Laissez vide pour stdout (mieux pour Kubernetes)
+  
+  # SÉCURITÉ AVANCÉE
+  websocket:
+    enabled: true
+    port: 3012
+  
+  # Désactiver features non nécessaires
+  hibpApiKey: ""  # Have I Been Pwned API (optionnel)
+  
+  # Performance
+  databaseMaxConns: 10
+  
+  # Sauvegardes
+  # Vaultwarden peut faire des backups internes, mais Longhorn est préférable
+  backupEnabled: false
+
+# SERVICE - Exposition localhost
+service:
+  type: ClusterIP
+  port: 80
+  annotations: {}
+
+# INGRESS - Désactivé pour localhost
+ingress:
+  enabled: false
+  # Pour production avec certificats:
+  # enabled: true
+  # className: nginx
+  # annotations:
+  #   cert-manager.io/cluster-issuer: letsencrypt-prod
+  # hosts:
+  #   - host: vault.votredomaine.com
+  #     paths:
+  #       - path: /
+  #         pathType: Prefix
+  # tls:
+  #   - secretName: vaultwarden-tls
+  #     hosts:
+  #       - vault.votredomaine.com
+
+# HEALTHCHECKS - Surveillance de l'application
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+
+# SÉCURITÉ POD
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65534
+  runAsGroup: 65534
+  fsGroup: 65534
+  fsGroupChangePolicy: "OnRootMismatch"
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+
+# NODE AFFINITY - Optionnel: déployer sur des nœuds spécifiques
+# affinity:
+#   nodeAffinity:
+#     preferredDuringSchedulingIgnoredDuringExecution:
+#       - weight: 100
+#         preference:
+#           matchExpressions:
+#             - key: node-role.kubernetes.io/storage
+#               operator: In
+#               values:
+#                 - "true"

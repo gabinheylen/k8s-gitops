@@ -3,24 +3,37 @@ kind: Application
 metadata:
   name: vaultwarden
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io  # Cleanup proper lors de la suppression
 spec:
   project: default
-
+  
   source:
-    repoURL: https://github.com/TON_ORG/k8s-gitops.git
-    targetRevision: main
-    path: apps/vaultwarden
+    repoURL: https://guerzon.github.io/vaultwarden
+    chart: vaultwarden
+    targetRevision: 0.34.4  # Vérifiez la dernière version stable
     helm:
-      valueFiles:
-        - values.yaml
-
+      valuesObject:
+        # Référence vers votre fichier values.yaml personnalisé
+        # Les valeurs sont mergées avec le chart
+  
   destination:
     server: https://kubernetes.default.svc
     namespace: vaultwarden
-
+  
   syncPolicy:
     automated:
-      prune: true
-      selfHeal: true
+      prune: false      # NE PAS supprimer automatiquement les ressources
+      selfHeal: true    # Auto-correction si dérive détectée
+      allowEmpty: false
     syncOptions:
       - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true  # Supprime en dernier (si prune activé)
+    
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
