@@ -1,0 +1,17 @@
+image:
+  repository: vaultwarden/server
+  tag: latest
+
+data:
+  name: data
+  size: 5Gi
+  storageClass: longhorn
+
+service:
+  type: ClusterIP
+  port: 80
+
+env:
+  DOMAIN: "https://vaultwarden.example.com"
+  SIGNUPS_ALLOWED: "false"
+  WEBSOCKET_ENABLED: "true"
