@@ -1,17 +1,17 @@
+replicaCount: 1
+
 image:
   repository: vaultwarden/server
   tag: latest
-
-data:
-  name: data
-  size: 5Gi
-  storageClass: longhorn
-
-service:
-  type: ClusterIP
-  port: 80
+  pullPolicy: IfNotPresent
 
 env:
   DOMAIN: "https://vaultwarden.example.com"
   SIGNUPS_ALLOWED: "false"
   WEBSOCKET_ENABLED: "true"
+
+persistence:
+  enabled: true
+  size: 5Gi
+  storageClass: longhorn
+  accessMode: ReadWriteOnce
