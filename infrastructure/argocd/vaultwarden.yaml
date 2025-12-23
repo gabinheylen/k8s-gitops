@@ -3,12 +3,14 @@ kind: Application
 metadata:
   name: vaultwarden
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://github.com/gabinheylen/k8s-gitops.git
+    repoURL: https://github.com/VOTRE-USERNAME/VOTRE-REPO.git
     targetRevision: HEAD
-    path: vaultwarden
+    path: apps/vaultwarden
   destination:
     server: https://kubernetes.default.svc
     namespace: vaultwarden
