@@ -3,6 +3,8 @@ kind: IPAddressPool
 metadata:
   name: lan-pool
   namespace: metallb-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   addresses:
-  - 192.168.1.220-192.168.1.225  # ⚠️ ADAPTE À TON LAN
+  - 192.168.1.220-192.168.1.225
