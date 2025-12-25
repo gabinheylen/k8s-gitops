@@ -17,4 +17,4 @@ spec:
           service:
             name: vaultwarden
             port:
-              number: 8082
+              number: 80
