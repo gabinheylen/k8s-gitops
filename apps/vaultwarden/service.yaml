@@ -4,12 +4,10 @@ metadata:
   name: vaultwarden
   namespace: vaultwarden
 spec:
-  type: NodePort
+  type: ClusterIP        # ✅
   selector:
     app: vaultwarden
   ports:
-  - port: 80
+  - name: http
+    port: 80
     targetPort: 80
-    nodePort: 30082
-    protocol: TCP
-    name: http
