@@ -15,22 +15,17 @@ spec:
       values: |
         deployment:
           replicas: 1
+          podAnnotations: {}
+          hostNetwork: true
         
         ports:
           web:
             port: 80
-            exposedPort: 80
-            nodePort: 30080
           websecure:
             port: 443
-            exposedPort: 443
-            nodePort: 30443
-          traefik:
-            port: 9000
-            exposedPort: 9000
         
         service:
-          type: NodePort
+          type: ClusterIP
         
         ingressClass:
           enabled: true
