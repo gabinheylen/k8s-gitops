@@ -25,7 +25,8 @@ spec:
             port: 443
         
         service:
-          type: 
+          type: LoadBalancer
+
         
         ingressClass:
           enabled: true
