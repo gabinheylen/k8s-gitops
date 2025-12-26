@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: vaultwarden.localhost
+  - host: vaultwarden.local
     http:
       paths:
       - path: /
