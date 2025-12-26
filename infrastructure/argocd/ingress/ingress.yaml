@@ -5,7 +5,10 @@ metadata:
   namespace: argocd
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
+    # Indique à Traefik que le backend est en HTTPS
     traefik.ingress.kubernetes.io/service.serversscheme: https
+    # IMPORTANT : Désactive la vérification du certificat TLS du backend
+    traefik.ingress.kubernetes.io/service.serverstransport: argocd-insecure@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
