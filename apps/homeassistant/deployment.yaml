@@ -17,38 +17,40 @@ spec:
     spec:
       containers:
       - name: homeassistant
-        image: homeassistant/home-assistant:2024.1.0
+        image: homeassistant/home-assistant:2024.12.1
         ports:
         - containerPort: 8123
           name: http
         env:
         - name: TZ
           value: "Europe/Paris"
+        - name: HTTP_TRUSTED_PROXIES
+          value: "10.244.0.0/16,172.16.0.0/12,192.168.0.0/16"
         volumeMounts:
         - name: homeassistant-data
           mountPath: /config
         resources:
           requests:
-            memory: "512Mi"
-            cpu: "200m"
-          limits:
             memory: "1Gi"
             cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
         livenessProbe:
+          httpGet:
+            path: /
+            port: 8123
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
           httpGet:
             path: /
             port: 8123
           initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8123
-          initialDelaySeconds: 30
-          periodSeconds: 5
-          timeoutSeconds: 3
           failureThreshold: 3
       volumes:
       - name: homeassistant-data
