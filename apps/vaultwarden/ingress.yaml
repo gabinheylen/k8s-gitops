@@ -4,9 +4,16 @@ metadata:
   name: vaultwarden
   namespace: vaultwarden
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    traefik.ingress.kubernetes.io/router.middlewares: "vaultwarden-https-redirect@kubernetescrd"
 spec:
   ingressClassName: traefik
+  tls:
+  - hosts:
+    - vaultwarden.local
+    secretName: vaultwarden-tls
   rules:
   - host: vaultwarden.local
     http:

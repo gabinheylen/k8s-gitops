@@ -21,8 +21,13 @@ spec:
         ports:
           web:
             port: 80
+            redirectTo: websecure
           websecure:
             port: 443
+            tls:
+              enabled: true
+              options: "default"
+              certResolver: "letsencrypt"
         
         service:
           type: LoadBalancer
@@ -42,6 +47,14 @@ spec:
             allowCrossNamespace: true
           kubernetesIngress:
             enabled: true
+        
+        certificatesResolvers:
+          letsencrypt:
+            acme:
+              email: your-email@example.com  # À remplacer par votre email
+              storage: /acme.json
+              httpChallenge:
+                entryPoint: web
   
   destination:
     server: https://kubernetes.default.svc
