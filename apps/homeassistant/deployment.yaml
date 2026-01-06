@@ -24,14 +24,12 @@ spec:
         env:
         - name: TZ
           value: "Europe/Paris"
-        - name: HTTP_TRUSTED_PROXIES
-          value: "*"
         - name: HOMEASSISTANT__HTTP__SERVER_HOST
           value: "0.0.0.0"
         - name: HOMEASSISTANT__HTTP__SERVER_PORT
           value: "8123"
         - name: HOMEASSISTANT__HTTP__CORS_ALLOWED_ORIGINS
-          value: "https://homeassistant.local"
+          value: "https://homeassistant.local,http://homeassistant.local"
         volumeMounts:
         - name: homeassistant-data
           mountPath: /config
@@ -44,7 +42,7 @@ spec:
             cpu: "1000m"
         livenessProbe:
           httpGet:
-            path: /
+            path: /onboarding.html
             port: 8123
           initialDelaySeconds: 120
           periodSeconds: 30
@@ -52,7 +50,7 @@ spec:
           failureThreshold: 3
         readinessProbe:
           httpGet:
-            path: /
+            path: /onboarding.html
             port: 8123
           initialDelaySeconds: 60
           periodSeconds: 10

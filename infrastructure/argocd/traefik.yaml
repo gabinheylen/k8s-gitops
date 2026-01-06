@@ -51,7 +51,7 @@ spec:
         certificatesResolvers:
           letsencrypt:
             acme:
-              email: gabin.heylen@example.com  # Remplacer par votre vraie email
+              email: gabin0406heylen@gmail.com
               storage: /acme.json
               httpChallenge:
                 entryPoint: web
