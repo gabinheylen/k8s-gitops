@@ -13,10 +13,8 @@ spec:
       labels:
         app: homeassistant
     spec:
-      hostNetwork: true
-      dnsPolicy: ClusterFirstWithHostNet
 
-      # ✅ INIT CONTAINER (ÉTAPE 2)
+      # ✅ INIT CONTAINER
       initContainers:
         - name: init-config
           image: busybox
@@ -45,10 +43,7 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-          securityContext:
-            privileged: true
 
-      # ✅ VOLUMES (ÉTAPE 4)
       volumes:
         - name: config
           persistentVolumeClaim:
