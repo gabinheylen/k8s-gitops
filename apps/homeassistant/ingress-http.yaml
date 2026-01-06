@@ -1,18 +1,13 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: homeassistant
+  name: homeassistant-http
   namespace: homeassistant
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"
-    traefik.ingress.kubernetes.io/router.middlewares: "homeassistant-headers@kubernetescrd"
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: "homeassistant-https-redirect@kubernetescrd"
 spec:
   ingressClassName: traefik
-  tls:
-  - hosts:
-    - homeassistant.local
-    secretName: homeassistant-tls
   rules:
   - host: homeassistant.local
     http:
