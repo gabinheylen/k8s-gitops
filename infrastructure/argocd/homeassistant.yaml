@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/gabinheylen/k8s-gitops.git
-    targetRevision: main
+    targetRevision: HEAD
     path: apps/homeassistant
   destination:
     server: https://kubernetes.default.svc

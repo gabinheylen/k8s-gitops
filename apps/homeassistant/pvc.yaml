@@ -1,9 +1,7 @@
----
-# PersistentVolumeClaim
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: homeassistant-data
+  name: homeassistant-config
   namespace: homeassistant
 spec:
   accessModes:
@@ -11,4 +9,4 @@ spec:
   storageClassName: longhorn
   resources:
     requests:
-      storage: 10Gi
+      storage: 5Gi

@@ -1,11 +1,13 @@
----
-# Middleware de redirection HTTPS (à créer dans le namespace default ou kube-system)
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: redirect-https
-  namespace: default
+  name: homeassistant-headers
+  namespace: homeassistant
 spec:
-  redirectScheme:
-    scheme: https
-    permanent: true
+  headers:
+    customRequestHeaders:
+      X-Forwarded-Proto: "https"
+    customResponseHeaders:
+      X-Frame-Options: "SAMEORIGIN"
+      X-Content-Type-Options: "nosniff"
+      Referrer-Policy: "no-referrer-when-downgrade"

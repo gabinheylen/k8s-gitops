@@ -1,5 +1,3 @@
----
-# Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -9,6 +7,8 @@ metadata:
     app: homeassistant
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: homeassistant
@@ -17,34 +17,25 @@ spec:
       labels:
         app: homeassistant
     spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       containers:
       - name: homeassistant
-        image: homeassistant/home-assistant:2024.12.1
+        image: ghcr.io/home-assistant/home-assistant:stable
         ports:
         - containerPort: 8123
           name: http
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: localtime
+          mountPath: /etc/localtime
+          readOnly: true
         env:
         - name: TZ
           value: "Europe/Paris"
-        volumeMounts:
-        - name: homeassistant-data
-          mountPath: /config
-        resources:
-          requests:
-            memory: "1Gi"
-            cpu: "500m"
-          limits:
-            memory: "2Gi"
-            cpu: "1000m"
         livenessProbe:
-          httpGet:
-            path: /
-            port: 8123
-          initialDelaySeconds: 120
-          periodSeconds: 30
-          timeoutSeconds: 10
-          failureThreshold: 3
-        readinessProbe:
           httpGet:
             path: /
             port: 8123
@@ -52,7 +43,25 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8123
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
       volumes:
-      - name: homeassistant-data
+      - name: config
         persistentVolumeClaim:
-          claimName: homeassistant-data
+          claimName: homeassistant-config
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+          type: File
