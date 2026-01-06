@@ -3,13 +3,11 @@ kind: Application
 metadata:
   name: homeassistant
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
     repoURL: https://github.com/gabinheylen/k8s-gitops.git
-    targetRevision: HEAD
+    targetRevision: main
     path: apps/homeassistant
   destination:
     server: https://kubernetes.default.svc
@@ -19,4 +17,4 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true

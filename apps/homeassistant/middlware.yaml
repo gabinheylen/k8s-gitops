@@ -6,8 +6,7 @@ metadata:
 spec:
   headers:
     customRequestHeaders:
-      X-Forwarded-Proto: "https"
+      X-Forwarded-Proto: http
     customResponseHeaders:
-      X-Frame-Options: "SAMEORIGIN"
-      X-Content-Type-Options: "nosniff"
-      Referrer-Policy: "no-referrer-when-downgrade"
+      X-Frame-Options: SAMEORIGIN
+    stsSeconds: 0

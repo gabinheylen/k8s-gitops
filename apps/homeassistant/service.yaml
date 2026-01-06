@@ -3,14 +3,11 @@ kind: Service
 metadata:
   name: homeassistant
   namespace: homeassistant
-  labels:
-    app: homeassistant
 spec:
-  type: ClusterIP
-  ports:
-  - port: 8123
-    targetPort: 8123
-    protocol: TCP
-    name: http
   selector:
     app: homeassistant
+  ports:
+    - name: http
+      port: 8123
+      targetPort: 8123
+  type: ClusterIP
