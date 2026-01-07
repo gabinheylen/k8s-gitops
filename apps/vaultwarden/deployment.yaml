@@ -23,7 +23,7 @@ spec:
           name: http
         env:
         - name: DOMAIN
-          value: "https://vaultwarden.local"
+          value: "https://vaultwarden.ga-nan.ovh"
         - name: WEBSOCKET_ENABLED
           value: "true"
         volumeMounts:

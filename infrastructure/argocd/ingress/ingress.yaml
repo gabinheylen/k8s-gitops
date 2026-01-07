@@ -12,10 +12,10 @@ spec:
   ingressClassName: traefik
   tls:
   - hosts:
-    - argocd.local
+    - argocd.ga-nan.ovh
     secretName: argocd-tls
   rules:
-  - host: argocd.local
+  - host: argocd.ga-nan.ovh
     http:
       paths:
       - path: /

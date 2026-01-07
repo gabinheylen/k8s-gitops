@@ -12,10 +12,10 @@ spec:
   ingressClassName: traefik
   tls:
   - hosts:
-    - longhorn.localhost
+    - longhorn.ga-nan.ovh
     secretName: longhorn-tls
   rules:
-  - host: longhorn.localhost
+  - host: longhorn.ga-nan.ovh
     http:
       paths:
       - path: /

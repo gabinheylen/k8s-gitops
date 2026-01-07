@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: homeassistant.local
+    - host: homeassistant.ga-nan.ovh
       http:
         paths:
           - path: /

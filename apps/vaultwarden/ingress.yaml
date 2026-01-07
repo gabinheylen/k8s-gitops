@@ -12,10 +12,10 @@ spec:
   ingressClassName: traefik
   tls:
   - hosts:
-    - vaultwarden.local
+    - vaultwarden.ga-nan.ovh
     secretName: vaultwarden-tls
   rules:
-  - host: vaultwarden.local
+  - host: vaultwarden.ga-nan.ovh
     http:
       paths:
       - path: /
