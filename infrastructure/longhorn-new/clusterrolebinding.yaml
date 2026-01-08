@@ -1,0 +1,18 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: longhorn-bind-new
+  labels:
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/instance: longhorn-new
+    app.kubernetes.io/version: v1.10.1
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: longhorn-1.10.1
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: longhorn-role-new
+subjects:
+- kind: ServiceAccount
+  name: longhorn-service-account
+  namespace: longhorn-system-new

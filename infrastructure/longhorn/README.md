@@ -2,6 +2,20 @@
 
 Ce dossier contient la configuration principale de Longhorn pour GitOps avec Argocd.
 
+## 🚨 ATTENTION - Migration en cours
+
+Plusieurs services utilisent actuellement Longhorn :
+- **vaultwarden** : 5Gi (actif)
+- **postgres** : 20Gi (en migration)
+- **homeassistant** : 5Gi (en terminaison)
+
+### Plan de migration :
+1. Créer un nouveau storageclass temporaire
+2. Migrer les volumes critiques (vaultwarden)
+3. Supprimer l'ancienne installation Longhorn
+4. Déployer la nouvelle configuration
+5. Recréer les volumes avec le nouveau Longhorn
+
 ## Fichiers
 
 - `namespace.yaml` - Namespace longhorn-system
