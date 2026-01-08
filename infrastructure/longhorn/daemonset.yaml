@@ -91,6 +91,13 @@ spec:
           timeoutSeconds: 1
         securityContext:
           privileged: true
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
         volumeMounts:
         - name: boot
           mountPath: /host/boot/

@@ -52,6 +52,13 @@ spec:
           value: http://longhorn-backend:9500
         - name: LONGHORN_UI_PORT
           value: "8000"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
         volumeMounts:
         - name: nginx-cache
           mountPath: /var/cache/nginx/
