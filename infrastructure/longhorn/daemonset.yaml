@@ -1,0 +1,137 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: longhorn-manager
+  namespace: longhorn-system
+  labels:
+    app: longhorn-manager
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/instance: longhorn
+    app.kubernetes.io/version: v1.10.1
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: longhorn-1.10.1
+spec:
+  selector:
+    matchLabels:
+      app: longhorn-manager
+  template:
+    metadata:
+      labels:
+        app: longhorn-manager
+        app.kubernetes.io/name: longhorn
+        app.kubernetes.io/instance: longhorn
+        app.kubernetes.io/version: v1.10.1
+        app.kubernetes.io/managed-by: Helm
+        helm.sh/chart: longhorn-1.10.1
+    spec:
+      serviceAccountName: longhorn-service-account
+      priorityClassName: longhorn-critical
+      containers:
+      - name: longhorn-manager
+        image: longhornio/longhorn-manager:v1.10.1
+        imagePullPolicy: IfNotPresent
+        command:
+        - longhorn-manager
+        - -d
+        - daemon
+        - --engine-image
+        - longhornio/longhorn-engine:v1.10.1
+        - --instance-manager-image
+        - longhornio/longhorn-instance-manager:v1.10.1
+        - --share-manager-image
+        - longhornio/longhorn-share-manager:v1.10.1
+        - --backing-image-manager-image
+        - longhornio/backing-image-manager:v1.10.1
+        - --support-bundle-manager-image
+        - longhornio/support-bundle-kit:v0.0.71
+        - --manager-image
+        - longhornio/longhorn-manager:v1.10.1
+        - --service-account
+        - longhorn-service-account
+        - --upgrade-version-check
+        ports:
+        - containerPort: 9500
+          name: manager
+          protocol: TCP
+        - containerPort: 9502
+          name: admission-wh
+          protocol: TCP
+        - containerPort: 9503
+          name: recov-backend
+          protocol: TCP
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /v1/healthz
+            port: 9502
+            scheme: HTTPS
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: boot
+          mountPath: /host/boot/
+          readOnly: true
+        - name: dev
+          mountPath: /host/dev/
+        - name: proc
+          mountPath: /host/proc/
+          readOnly: true
+        - name: etc
+          mountPath: /host/etc/
+          readOnly: true
+        - name: longhorn
+          mountPath: /var/lib/longhorn/
+          mountPropagation: Bidirectional
+        - name: longhorn-grpc-tls
+          mountPath: /tls-files/
+      - name: pre-pull-share-manager-image
+        image: longhornio/longhorn-share-manager:v1.10.1
+        imagePullPolicy: IfNotPresent
+        command:
+        - sh
+        - -c
+        - echo share-manager image pulled && sleep infinity
+      volumes:
+      - name: boot
+        hostPath:
+          path: /boot/
+      - name: dev
+        hostPath:
+          path: /dev/
+      - name: proc
+        hostPath:
+          path: /proc/
+      - name: etc
+        hostPath:
+          path: /etc/
+      - name: longhorn
+        hostPath:
+          path: /var/lib/longhorn/
+      - name: longhorn-grpc-tls
+        secret:
+          secretName: longhorn-grpc-tls
+          optional: true
