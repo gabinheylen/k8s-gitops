@@ -1,0 +1,20 @@
+# Middleware Traefik pour restreindre l'accès au réseau local uniquement
+# Ce middleware utilise IPWhitelist pour n'autoriser que les IPs 192.168.1.0/24
+# Il sera appliqué aux services sensibles (HA, Longhorn, ArgoCD)
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: local-only
+  namespace: traefik
+  annotations:
+    # Annotation pour documentation
+    description: "Restreint l'accès au réseau local 192.168.1.0/24 uniquement"
+spec:
+  ipWhiteList:
+    # Liste des plages d'IP autorisées
+    sourceRange:
+      - "192.168.1.0/24"
+      # Ajout de localhost pour les tests internes
+      - "127.0.0.1/32"
+      - "10.0.0.0/8"    # Réseau interne Kubernetes (au cas où)
+      - "172.16.0.0/12" # Réseau interne Kubernetes (au cas où)
