@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/TON_GIT_REPO/k8s-gitops.git
+    repoURL: https://github.com/gabinheylen/k8s-gitops.git
     targetRevision: HEAD
     path: apps/postgres
   destination:
