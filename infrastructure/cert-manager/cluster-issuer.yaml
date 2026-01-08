@@ -6,7 +6,7 @@ metadata:
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
-    email: ggabin0406heylen@gmail.com  # Remplacer par votre vraie email
+    email: gabin0406heylen@gmail.com  # Remplacer par votre vraie email
     privateKeySecretRef:
       name: letsencrypt-staging
     solvers:
