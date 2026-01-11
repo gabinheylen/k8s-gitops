@@ -1,0 +1,239 @@
+# Installation manuelle de Longhorn avec toutes les CRDs
+# kubectl apply -f complete-install.yaml
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: longhorn-system-new
+  annotations:
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/warn: privileged
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: nodes.longhorn.io
+spec:
+  group: longhorn.io
+  names:
+    kind: Node
+    plural: nodes
+    singular: node
+  scope: Namespaced
+  versions:
+  - name: v1beta2
+    served: true
+    storage: true
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: volumes.longhorn.io
+spec:
+  group: longhorn.io
+  names:
+    kind: Volume
+    plural: volumes
+    singular: volume
+  scope: Namespaced
+  versions:
+  - name: v1beta2
+    served: true
+    storage: true
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: engines.longhorn.io
+spec:
+  group: longhorn.io
+  names:
+    kind: Engine
+    plural: engines
+    singular: engine
+  scope: Namespaced
+  versions:
+  - name: v1beta2
+    served: true
+    storage: true
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: replicas.longhorn.io
+spec:
+  group: longhorn.io
+  names:
+    kind: Replica
+    plural: replicas
+    singular: replica
+  scope: Namespaced
+  versions:
+  - name: v1beta2
+    served: true
+    storage: true
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: settings.longhorn.io
+spec:
+  group: longhorn.io
+  names:
+    kind: Setting
+    plural: settings
+    singular: setting
+  scope: Namespaced
+  versions:
+  - name: v1beta2
+    served: true
+    storage: true
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: longhorn-manager
+  namespace: longhorn-system-new
+  labels:
+    app: longhorn-manager
+  annotations:
+    pod-security.kubernetes.io/enforce: privileged
+spec:
+  selector:
+    matchLabels:
+      app: longhorn-manager
+  template:
+    metadata:
+      labels:
+        app: longhorn-manager
+    spec:
+      serviceAccountName: longhorn-service-account
+      hostNetwork: false
+      containers:
+      - name: longhorn-manager
+        image: longhornio/longhorn-manager:v1.10.1
+        command:
+        - longhorn-manager
+        - -d
+        - daemon
+        - --engine-image
+        - longhornio/longhorn-engine:v1.10.1
+        - --instance-manager-image
+        - longhornio/longhorn-instance-manager:v1.10.1
+        - --service-account
+        - longhorn-service-account
+        ports:
+        - containerPort: 9500
+          name: manager
+        - containerPort: 9502
+          name: admission-wh
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: longhorn
+          mountPath: /var/lib/longhorn/
+          mountPropagation: Bidirectional
+      volumes:
+      - name: longhorn
+        hostPath:
+          path: /var/lib/longhorn/
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: longhorn-backend
+  namespace: longhorn-system-new
+  labels:
+    app: longhorn-manager
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9500
+    targetPort: manager
+  selector:
+    app: longhorn-manager
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: longhorn-service-account
+  namespace: longhorn-system-new
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: longhorn-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "nodes", "persistentvolumes", "persistentvolumeclaims", "services", "endpoints"]
+  verbs: ["get", "list", "watch", "create", "delete", "patch"]
+- apiGroups: ["apps"]
+  resources: ["daemonsets", "replicasets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["batch"]
+  resources: ["jobs", "cronjobs"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+- apiGroups: ["storage.k8s.io"]
+  resources: ["storageclasses", "volumeattachments"]
+  verbs: ["get", "list", "watch", "create", "delete", "patch"]
+- apiGroups: ["longhorn.io"]
+  resources: ["*"]
+  verbs: ["*"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: longhorn-bind
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: longhorn-role
+subjects:
+- kind: ServiceAccount
+  name: longhorn-service-account
+  namespace: longhorn-system-new
+
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-new
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+parameters:
+  numberOfReplicas: "2"
+  staleReplicaTimeout: "30"
+  fsType: "ext4"
+  dataLocality: "disabled"
+  mkfsOptions: "-E nodiscard"
+reclaimPolicy: Delete
+volumeBindingMode: Immediate

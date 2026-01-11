@@ -1,0 +1,47 @@
+# Installation manuelle de Longhorn avec toutes les CRDs
+# kubectl apply -f install-longhorn.yaml
+
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: longhorn
+  namespace: longhorn-system-new
+spec:
+  interval: 5m
+  url: https://charts.longhorn.io
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: longhorn
+  namespace: longhorn-system-new
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: longhorn
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: longhorn
+      version: "1.10.1"
+  values:
+    defaultSettings:
+      defaultReplicaCount: 2
+    persistence:
+      defaultClass: true
+      defaultClassReplicaCount: 2
+    service:
+      ui:
+        type: ClusterIP
+    ingress:
+      enabled: true
+      host: longhorn-new.ga-nan.ovh
+      tls: true
+      tlsSecret: longhorn-new-tls
+      annotations:
+        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+        traefik.ingress.kubernetes.io/router.middlewares: traefik-local-only@kubernetescrd
+        cert-manager.io/cluster-issuer: letsencrypt-prod
