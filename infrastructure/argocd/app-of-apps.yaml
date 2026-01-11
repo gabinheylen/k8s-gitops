@@ -1,8 +1,10 @@
-apiVersion: argoproj.io/v1alpha1
+# apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: apps
+  name: infrastructure
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -16,25 +18,3 @@ spec:
     automated:
       prune: true
       selfHeal: true
----
-# Application pour déployer le middleware de restriction IP
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: ip-whitelist-middleware
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/gabinheylen/k8s-gitops.git
-    targetRevision: main
-    path: infrastructure/middleware
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: traefik
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
