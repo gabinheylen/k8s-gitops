@@ -1,0 +1,14 @@
+machine:
+  network:
+    hostname: talos-w1
+    interfaces:
+      - interface: eth0
+        addresses:
+          - 192.168.1.215/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 192.168.1.254
+        dhcp: false
+    nameservers:
+      - 1.1.1.1
+      - 8.8.8.8 
