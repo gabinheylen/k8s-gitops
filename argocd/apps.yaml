@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: 'https://github.com/gabinheylen/k8s-gitops.git'
     targetRevision: main
-    path: '.'
+    path: 'argocd'
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: default
