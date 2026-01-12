@@ -1,19 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: gitops-root
+  name: longhorn-core
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   project: default
   source:
     repoURL: 'https://github.com/gabinheylen/k8s-gitops.git'
     targetRevision: main
-    path: '.'
+    path: 'longhorn'
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: default
+    namespace: longhorn-system
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-

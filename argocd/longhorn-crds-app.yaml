@@ -1,19 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: gitops-root
+  name: longhorn-crds
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: default
   source:
     repoURL: 'https://github.com/gabinheylen/k8s-gitops.git'
     targetRevision: main
-    path: '.'
+    path: 'longhorn/crds'
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: default
+    namespace: longhorn-system  # Namespace n’a pas besoin d’exister pour les CRDs
   syncPolicy:
     automated:
-      prune: true
+      prune: false   # Ne jamais supprimer les CRDs par erreur
       selfHeal: true
-
