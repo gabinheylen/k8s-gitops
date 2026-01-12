@@ -106,3 +106,8 @@ Tu peux accéder à l’UI
 Tu as la structure GitOps pour toutes tes apps
 
 Tu n’as rien appliqué manuellement hormis ArgoCD lui-même
+
+
+kubectl create clusterrolebinding argocd-admin \
+  --clusterrole=cluster-admin \
+  --serviceaccount=argocd:argocd-application-controller
