@@ -22,22 +22,7 @@ metadata:
   name: longhorn-role
 rules:
   - apiGroups: [""]
-    resources:
-      [
-        "pods",
-        "events",
-        "persistentvolumes",
-        "persistentvolumeclaims",
-        "persistentvolumeclaims/status",
-        "nodes",
-        "proxy/nodes",
-        "pods/log",
-        "secrets",
-        "services",
-        "endpoints",
-        "configmaps",
-        "serviceaccounts",
-      ]
+    resources: ["pods", "events", "persistentvolumes", "persistentvolumeclaims", "persistentvolumeclaims/status", "nodes", "proxy/nodes", "pods/log", "secrets", "services", "endpoints", "configmaps", "serviceaccounts"]
     verbs: ["*"]
   - apiGroups: [""]
     resources: ["namespaces"]
@@ -55,23 +40,10 @@ rules:
     resources: ["priorityclasses"]
     verbs: ["watch", "list"]
   - apiGroups: ["storage.k8s.io"]
-    resources:
-      [
-        "storageclasses",
-        "volumeattachments",
-        "volumeattachments/status",
-        "csinodes",
-        "csidrivers",
-      ]
+    resources: ["storageclasses", "volumeattachments", "volumeattachments/status", "csinodes", "csidrivers"]
     verbs: ["*"]
   - apiGroups: ["snapshot.storage.k8s.io"]
-    resources:
-      [
-        "volumesnapshotclasses",
-        "volumesnapshots",
-        "volumesnapshotcontents",
-        "volumesnapshotcontents/status",
-      ]
+    resources: ["volumesnapshotclasses", "volumesnapshots", "volumesnapshotcontents", "volumesnapshotcontents/status"]
     verbs: ["*"]
   - apiGroups: ["longhorn.io"]
     resources: ["*"]
@@ -166,96 +138,96 @@ spec:
         app: longhorn-manager
     spec:
       tolerations:
-        - key: node-role.kubernetes.io/control-plane
-          operator: Exists
-          effect: NoSchedule
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
       containers:
-        - name: longhorn-manager
-          image: longhornio/longhorn-manager:v1.7.2
-          imagePullPolicy: IfNotPresent
-          securityContext:
-            privileged: true
-          command:
-            - longhorn-manager
-            - -d
-            - daemon
-            - --engine-image
-            - longhornio/longhorn-engine:v1.7.2
-            - --instance-manager-image
-            - longhornio/longhorn-instance-manager:v1.7.2
-            - --share-manager-image
-            - longhornio/longhorn-share-manager:v1.7.2
-            - --backing-image-manager-image
-            - longhornio/backing-image-manager:v1.7.2
-            - --support-bundle-manager-image
-            - longhornio/support-bundle-kit:v0.0.42
-            - --manager-image
-            - longhornio/longhorn-manager:v1.7.2
-            - --service-account
-            - longhorn-service-account
-          ports:
-            - containerPort: 9500
-              name: manager
-            - containerPort: 9501
-              name: conversion-wh
-            - containerPort: 9502
-              name: admission-wh
-            - containerPort: 9503
-              name: recov-backend
-          readinessProbe:
-            httpGet:
-              path: /v1/healthz
-              port: 9501
-              scheme: HTTPS
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            timeoutSeconds: 3
-            failureThreshold: 3
-          livenessProbe:
-            httpGet:
-              path: /v1/healthz
-              port: 9501
-              scheme: HTTPS
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            timeoutSeconds: 3
-          volumeMounts:
-            - name: dev
-              mountPath: /host/dev/
-            - name: proc
-              mountPath: /host/proc/
-            - name: longhorn
-              mountPath: /var/lib/longhorn/
-              mountPropagation: Bidirectional
-            - name: longhorn-grpc-tls
-              mountPath: /tls-files/
-          env:
-            - name: POD_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            - name: POD_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.podIP
-            - name: NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
-      volumes:
+      - name: longhorn-manager
+        image: longhornio/longhorn-manager:v1.7.2
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          privileged: true
+        command:
+        - longhorn-manager
+        - -d
+        - daemon
+        - --engine-image
+        - longhornio/longhorn-engine:v1.7.2
+        - --instance-manager-image
+        - longhornio/longhorn-instance-manager:v1.7.2
+        - --share-manager-image
+        - longhornio/longhorn-share-manager:v1.7.2
+        - --backing-image-manager-image
+        - longhornio/backing-image-manager:v1.7.2
+        - --support-bundle-manager-image
+        - longhornio/support-bundle-kit:v0.0.42
+        - --manager-image
+        - longhornio/longhorn-manager:v1.7.2
+        - --service-account
+        - longhorn-service-account
+        ports:
+        - containerPort: 9500
+          name: manager
+        - containerPort: 9501
+          name: conversion-wh
+        - containerPort: 9502
+          name: admission-wh
+        - containerPort: 9503
+          name: recov-backend
+        readinessProbe:
+          httpGet:
+            path: /v1/healthz
+            port: 9501
+            scheme: HTTPS
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /v1/healthz
+            port: 9501
+            scheme: HTTPS
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+        volumeMounts:
         - name: dev
-          hostPath:
-            path: /dev/
+          mountPath: /host/dev/
         - name: proc
-          hostPath:
-            path: /proc/
+          mountPath: /host/proc/
         - name: longhorn
-          hostPath:
-            path: /var/lib/longhorn/
+          mountPath: /var/lib/longhorn/
+          mountPropagation: Bidirectional
         - name: longhorn-grpc-tls
-          secret:
-            secretName: longhorn-grpc-tls
-            optional: true
+          mountPath: /tls-files/
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+      volumes:
+      - name: dev
+        hostPath:
+          path: /dev/
+      - name: proc
+        hostPath:
+          path: /proc/
+      - name: longhorn
+        hostPath:
+          path: /var/lib/longhorn/
+      - name: longhorn-grpc-tls
+        secret:
+          secretName: longhorn-grpc-tls
+          optional: true
       serviceAccountName: longhorn-service-account
   updateStrategy:
     rollingUpdate:
@@ -275,9 +247,9 @@ spec:
   selector:
     app: longhorn-manager
   ports:
-    - name: manager
-      port: 9500
-      targetPort: manager
+  - name: manager
+    port: 9500
+    targetPort: manager
 
 ---
 apiVersion: apps/v1
@@ -297,73 +269,73 @@ spec:
         app: longhorn-driver-deployer
     spec:
       tolerations:
-        - key: node-role.kubernetes.io/control-plane
-          operator: Exists
-          effect: NoSchedule
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
       initContainers:
-        - name: wait-longhorn-manager
-          image: longhornio/longhorn-manager:v1.7.2
-          command:
-            - sh
-            - -c
-            - |
-              while [ $(curl -m 1 -s -o /dev/null -w "%{http_code}" -k https://longhorn-backend:9500/v1/healthz) != "200" ]; do 
-                echo "Waiting for longhorn-manager to be ready..."
-                sleep 5
-              done
+      - name: wait-longhorn-manager
+        image: longhornio/longhorn-manager:v1.7.2
+        command: 
+        - sh
+        - -c
+        - |
+          while [ $(curl -m 1 -s -o /dev/null -w "%{http_code}" -k https://longhorn-backend:9500/v1/healthz) != "200" ]; do 
+            echo "Waiting for longhorn-manager to be ready..."
+            sleep 5
+          done
       containers:
-        - name: longhorn-driver-deployer
-          image: longhornio/longhorn-manager:v1.7.2
-          imagePullPolicy: IfNotPresent
-          command:
-            - longhorn-manager
-            - -d
-            - deploy-driver
-            - --manager-image
-            - longhornio/longhorn-manager:v1.7.2
-            - --manager-url
-            - http://longhorn-backend:9500/v1
-          env:
-            - name: POD_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            - name: NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
-            - name: SERVICE_ACCOUNT
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.serviceAccountName
-            - name: CSI_ATTACHER_REPLICA_COUNT
-              value: "2"
-            - name: CSI_PROVISIONER_REPLICA_COUNT
-              value: "2"
-            - name: CSI_RESIZER_REPLICA_COUNT
-              value: "2"
-            - name: CSI_SNAPSHOTTER_REPLICA_COUNT
-              value: "2"
-          securityContext:
-            privileged: true
-          volumeMounts:
-            - name: dev
-              mountPath: /host/dev/
-            - name: proc
-              mountPath: /host/proc/
-            - name: longhorn
-              mountPath: /var/lib/longhorn/
-              mountPropagation: Bidirectional
-      volumes:
+      - name: longhorn-driver-deployer
+        image: longhornio/longhorn-manager:v1.7.2
+        imagePullPolicy: IfNotPresent
+        command:
+        - longhorn-manager
+        - -d
+        - deploy-driver
+        - --manager-image
+        - longhornio/longhorn-manager:v1.7.2
+        - --manager-url
+        - http://longhorn-backend:9500/v1
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: SERVICE_ACCOUNT
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.serviceAccountName
+        - name: CSI_ATTACHER_REPLICA_COUNT
+          value: "2"
+        - name: CSI_PROVISIONER_REPLICA_COUNT
+          value: "2"
+        - name: CSI_RESIZER_REPLICA_COUNT
+          value: "2"
+        - name: CSI_SNAPSHOTTER_REPLICA_COUNT
+          value: "2"
+        securityContext:
+          privileged: true
+        volumeMounts:
         - name: dev
-          hostPath:
-            path: /dev/
+          mountPath: /host/dev/
         - name: proc
-          hostPath:
-            path: /proc/
+          mountPath: /host/proc/
         - name: longhorn
-          hostPath:
-            path: /var/lib/longhorn/
+          mountPath: /var/lib/longhorn/
+          mountPropagation: Bidirectional
+      volumes:
+      - name: dev
+        hostPath:
+          path: /dev/
+      - name: proc
+        hostPath:
+          path: /proc/
+      - name: longhorn
+        hostPath:
+          path: /var/lib/longhorn/
       serviceAccountName: longhorn-service-account
   updateStrategy:
     rollingUpdate:
@@ -390,39 +362,39 @@ spec:
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 1
-              podAffinityTerm:
-                labelSelector:
-                  matchExpressions:
-                    - key: app
-                      operator: In
-                      values:
-                        - longhorn-ui
-                topologyKey: kubernetes.io/hostname
+          - weight: 1
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - longhorn-ui
+              topologyKey: kubernetes.io/hostname
       containers:
-        - name: longhorn-ui
-          image: longhornio/longhorn-ui:v1.7.2
-          imagePullPolicy: IfNotPresent
-          volumeMounts:
-            - name: nginx-cache
-              mountPath: /var/cache/nginx/
-            - name: nginx-config
-              mountPath: /var/config/nginx/
-            - name: var-run
-              mountPath: /var/run/
-          ports:
-            - containerPort: 8000
-              name: http
-          env:
-            - name: LONGHORN_MANAGER_IP
-              value: "http://longhorn-backend:9500"
+      - name: longhorn-ui
+        image: longhornio/longhorn-ui:v1.7.2
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: nginx-cache
+          mountPath: /var/cache/nginx/
+        - name: nginx-config
+          mountPath: /var/config/nginx/
+        - name: var-run
+          mountPath: /var/run/
+        ports:
+        - containerPort: 8000
+          name: http
+        env:
+        - name: LONGHORN_MANAGER_IP
+          value: "http://longhorn-backend:9500"
       volumes:
-        - emptyDir: {}
-          name: nginx-cache
-        - emptyDir: {}
-          name: nginx-config
-        - emptyDir: {}
-          name: var-run
+      - emptyDir: {}
+        name: nginx-cache
+      - emptyDir: {}
+        name: nginx-config
+      - emptyDir: {}
+        name: var-run
       serviceAccountName: longhorn-service-account
 
 ---
@@ -438,9 +410,9 @@ spec:
   selector:
     app: longhorn-ui
   ports:
-    - name: http
-      port: 80
-      targetPort: http
+  - name: http
+    port: 80
+    targetPort: http
 
 ---
 apiVersion: storage.k8s.io/v1
