@@ -1,0 +1,94 @@
+version: v1alpha1 # Indicates the schema used to decode the contents.
+debug: false # Enable verbose logging to the console.
+persist: true
+machine:
+    type: worker # Defines the role of the machine within the cluster.
+    token: 4nwjm3.gwqr6u6x77kleopl # The `token` is used by a machine to join the PKI of the cluster.
+    ca:
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQekNCOHFBREFnRUNBaEVBc2w1SVVqOWJYdU9oVGdMYzcxcURXakFGQmdNclpYQXdFREVPTUF3R0ExVUUKQ2hNRmRHRnNiM013SGhjTk1qWXdNVEUxTWpBek16QXlXaGNOTXpZd01URXpNakF6TXpBeVdqQVFNUTR3REFZRApWUVFLRXdWMFlXeHZjekFxTUFVR0F5dGxjQU1oQUlkVmtESTZkNmVmaUJCUUlEcXNTYitsZCt0ejV3YVJDSE00CmhJMTZuU3BUbzJFd1h6QU9CZ05WSFE4QkFmOEVCQU1DQW9Rd0hRWURWUjBsQkJZd0ZBWUlLd1lCQlFVSEF3RUcKQ0NzR0FRVUZCd01DTUE4R0ExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRkNPem1nd0pWNkdPKzh5TgpYaE5od2wxWFZXNXNNQVVHQXl0bGNBTkJBREZDN3NXZVdmUXRreTVZdTB2ekFPbjhLTCtEbFFHWHRGaHMzSjNwClJob3RHVHBURXc4aERqRmF5dTdOcC9MWmpVQVpOc3lYR05DRnV0L0Z3c3FTdVFVPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        key: ""
+    certSANs: []
+    kubelet:
+        defaultRuntimeSeccompProfileEnabled: true # Enable container runtime default Seccomp profile.
+        disableManifestsDirectory: true # The `disableManifestsDirectory` field configures the kubelet to get static pod manifests from the /etc/kubernetes/manifests directory.
+
+    #     extraMounts:
+    #       - source: /var/lib/longhorn
+    #         destination: /var/lib/longhorn
+    #         type: bind
+    #         options: [bind, rshared, rw]
+          
+    #       - source: /dev
+    #         destination: /dev
+    #         type: bind
+    #         options: [bind, rshared, rw]
+    
+    disks:
+        - device: /dev/sdb
+          partitions:
+            - size: 0   # signifie "utiliser tout le disque"
+              mountpoint: /var/lib/longhorn
+        
+    kernel:
+        modules:
+            - name: nbd
+            - name: iscsi_tcp
+            - name: configfs
+
+    network:
+        hostname: talos-w1
+        interfaces:
+          - interface: eth0
+            addresses:
+              - 192.168.1.215/24
+            routes:
+              - network: 0.0.0.0/0
+                gateway: 192.168.1.254
+            dhcp: false
+        nameservers:
+          - 1.1.1.1
+          - 8.8.8.8 
+    install:
+        disk: /dev/sda # The disk used for installations.
+        image: factory.talos.dev/nocloud-installer/88d1f7a5c4f1d3aba7df787c448c1d3d008ed29cfb34af53fa0df4336a56040b:v1.12.1
+        wipe: false # Indicates if the installation disk should be wiped at installation time.
+        extensions:
+          - image: ghcr.io/siderolabs/iscsi-tools:v0.1.6
+          - image: ghcr.io/siderolabs/util-linux-tools:2.40.2
+          - image: ghcr.io/siderolabs/qemu-guest-agent:10.2.0
+
+    registries: {}
+    features:
+        rbac: true # Enable role-based access control (RBAC).
+        stableHostname: true # Enable stable default hostname.
+        apidCheckExtKeyUsage: true # Enable checks for extended key usage of client certificates in apid.
+        diskQuotaSupport: true # Enable XFS project quota support for EPHEMERAL partition and user disks.
+        kubePrism:
+            enabled: true # Enable KubePrism support - will start local load balancing proxy.
+            port: 7445 # KubePrism port.
+        hostDNS:
+            enabled: true # Enable host DNS caching resolver.
+            forwardKubeDNSToHost: true # Use the host DNS resolver as upstream for Kubernetes CoreDNS pods.
+
+cluster:
+    id: LhFs4e4AabwYUHOA64EQt94370lEpX1xOi5bQjoZGj8= # Globally unique identifier for this cluster (base64 encoded random 32 bytes).
+    secret: Hi8s8VQx+ZyIB8UEzVVrfPIDxdMtJtuAAbEw3oCvmk0= # Shared secret of cluster (base64 encoded random 32 bytes).
+    controlPlane:
+        endpoint: https://192.168.1.210:6443 # Endpoint is the canonical controlplane endpoint, which can be an IP address or a DNS hostname.
+    clusterName: talos-cluster # Configures the cluster's name.
+    network:
+        dnsDomain: cluster.local # The domain used by Kubernetes DNS.
+        podSubnets:
+            - 10.244.0.0/16
+        serviceSubnets:
+            - 10.96.0.0/12
+    token: 0z9z40.546wg1mpagygx4l3 # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
+    ca:
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpakNDQVRDZ0F3SUJBZ0lSQUoxVUc2L0cvWkdHL1VMUzZoL1FmYjh3Q2dZSUtvWkl6ajBFQXdJd0ZURVQKTUJFR0ExVUVDaE1LYTNWaVpYSnVaWFJsY3pBZUZ3MHlOakF4TVRVeU1ETXpNREphRncwek5qQXhNVE15TURNegpNREphTUJVeEV6QVJCZ05WQkFvVENtdDFZbVZ5Ym1WMFpYTXdXVEFUQmdjcWhrak9QUUlCQmdncWhrak9QUU1CCkJ3TkNBQVI4RjNuWWF2dGRhRUVnSm9PU0NESDVabkw2akY0c3pTSkRVa2Y0bEdrQWlnUjExR2Q4WmdkcnJLMG8KSnYrdzY4Nm1uYTM4UWduajZaUFh6VzRodSsxZW8yRXdYekFPQmdOVkhROEJBZjhFQkFNQ0FvUXdIUVlEVlIwbApCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPCkJCWUVGT2YwVlE0MVMrUzNNZlFZa0RObUhlckMzQVVuTUFvR0NDcUdTTTQ5QkFNQ0EwZ0FNRVVDSVFDT3FpbDUKZ3RrMms2MENiSEJMYklnKzhTeVoybFlpUnVSUzh1TmE3RVdFZ3dJZ1JYVnEzMzhaUlNwNlBuMk9WV2RwL3pQMgo5VER3ck51L3l1OVpkUUloSERvPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        key: ""
+    discovery:
+        enabled: true # Enable the cluster membership discovery feature.
+        registries:
+            kubernetes:
+                disabled: true # Disable Kubernetes discovery registry.
+            service: {}

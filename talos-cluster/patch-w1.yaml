@@ -1,29 +1,3 @@
 machine:
-  network:
-    hostname: talos-w1
-    interfaces:
-      - interface: eth0
-        addresses:
-          - 192.168.1.215/24
-        routes:
-          - network: 0.0.0.0/0
-            gateway: 192.168.1.254
-        dhcp: false
-    nameservers:
-      - 1.1.1.1
-      - 8.8.8.8 
-      # talos-longhorn-patch.yaml
-  kubelet:
-    extraMounts:
-      - destination: /var/lib/longhorn
-        type: bind
-        source: /dev/sdb
-        options:
-          - bind
-          - rshared
-          - rw
-  sysctls:
-    fs.inotify.max_user_instances: "8192"
-
-cluster:
-  allowSchedulingOnControlPlanes: false
+  install:
+    image: factory.talos.dev/nocloud-installer/c9078f9419961640c712a8bf2bb9174933dfcf1da383fd8ea2b7dc21493f8bac:v1.12.1

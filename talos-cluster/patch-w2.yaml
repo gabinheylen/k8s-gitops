@@ -12,15 +12,7 @@ machine:
     nameservers:
       - 1.1.1.1
       - 8.8.8.8 
-  kubelet:
-    extraMounts:
-      - destination: /var/lib/longhorn
-        type: bind
-        source: /dev/sdb
-        options:
-          - bind
-          - rshared
-          - rw
+      
   sysctls:
     fs.inotify.max_user_instances: "8192"
 
