@@ -43,7 +43,7 @@ spec:
 
         logs:
           general:
-            level: INFO
+            level: DEBUG
 
         persistence:
           enabled: true
@@ -76,8 +76,4 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-
-  logs:
-    general:
-      level: DEBUG
 
