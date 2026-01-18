@@ -4,7 +4,7 @@ metadata:
   name: longhorn-whitelist
   namespace: longhorn-system
 spec:
-  ipWhiteList:
+  ipAllowList:
     sourceRange:
       - 192.168.1.18/32
 ---
