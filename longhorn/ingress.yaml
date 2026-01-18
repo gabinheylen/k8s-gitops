@@ -6,7 +6,7 @@ metadata:
 spec:
   ipAllowList:
     sourceRange:
-      - 192.168.1.226/32
+      - 192.168.1.18/32
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -22,6 +22,7 @@ spec:
       kind: Rule
       middlewares:
         - name: longhorn-whitelist
+          namespace: longhorn-system
       services:
         - name: longhorn-frontend
           port: 80

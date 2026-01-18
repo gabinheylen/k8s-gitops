@@ -63,6 +63,8 @@ spec:
         additionalArguments:
           - "--global.checknewversion=false"
           - "--global.sendanonymoususage=false"
+          - "--entrypoints.web.forwardedHeaders.insecure=true"
+          - "--entrypoints.websecure.forwardedHeaders.insecure=true"
 
   destination:
     server: https://kubernetes.default.svc
@@ -74,3 +76,8 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+
+  logs:
+    general:
+      level: DEBUG
+
