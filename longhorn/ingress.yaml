@@ -1,12 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: longhorn-uiclear
+  name: longhorn-ui
   namespace: longhorn-system
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
-    traefik.ingress.kubernetes.io/whitelist-source-range: 192.168.1.18/32
+    #traefik.ingress.kubernetes.io/whitelist-source-range: 192.168.1.18/32
 spec:
   ingressClassName: traefik
   rules:
