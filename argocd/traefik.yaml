@@ -25,13 +25,12 @@ spec:
             port: 80
             redirectTo:
               port: websecure
-              
+
           websecure:
             port: 443
             tls:
               enabled: true
-              certResolver: letsencrypt
-
+              
         ingressClass:
           enabled: true
           isDefaultClass: true

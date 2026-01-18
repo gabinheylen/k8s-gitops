@@ -4,9 +4,9 @@ metadata:
   name: longhorn-ui
   namespace: longhorn-system
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"
-    #traefik.ingress.kubernetes.io/whitelist-source-range: 192.168.1.18/32
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    # Supprime ou commente la ligne TLS pour l'instant
+    # traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
   ingressClassName: traefik
   rules:
