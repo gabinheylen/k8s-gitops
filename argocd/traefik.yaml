@@ -35,15 +35,6 @@ spec:
           enabled: true
           isDefaultClass: true
 
-        providers:
-          kubernetesCRD:
-            enabled: true
-          kubernetesIngress:
-            enabled: true
-
-        logs:
-          level: DEBUG
-
         persistence:
           enabled: true
           name: data
@@ -60,10 +51,15 @@ spec:
                 entryPoint: web
 
         additionalArguments:
-          - "--global.checknewversion=false"
-          - "--global.sendanonymoususage=false"
-          - "--entrypoints.web.forwardedHeaders.insecure=true"
-          - "--entrypoints.websecure.forwardedHeaders.insecure=true"
+          - --log.level=DEBUG
+          - --accesslog=true
+
+          - --providers.kubernetescrd
+          - --providers.kubernetesingress
+
+          - --entrypoints.web.forwardedHeaders.insecure=true
+          - --entrypoints.websecure.forwardedHeaders.insecure=true
+
 
   destination:
     server: https://kubernetes.default.svc
