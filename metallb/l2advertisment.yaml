@@ -5,3 +5,6 @@ metadata:
   namespace: metallb-system
   annotations:
     argocd.argoproj.io/sync-wave: "1"
+spec:
+  ipAddressPools:
+  - lan-pool
