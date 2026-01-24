@@ -16,7 +16,6 @@ metadata:
 spec:
   entryPoints:
     - web
-    - websecure
   routes:
     - match: Host(`longhorn.ga-nan.ovh`)
       kind: Rule
