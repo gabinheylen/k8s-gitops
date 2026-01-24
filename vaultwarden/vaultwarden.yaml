@@ -46,6 +46,8 @@ spec:
           value: "true"
         - name: SIGNUPS_ALLOWED
           value: "false"
+        - name: INVITATIONS_ALLOWED
+          value: "false"
         - name: ADMIN_TOKEN
           valueFrom:
             secretKeyRef:
