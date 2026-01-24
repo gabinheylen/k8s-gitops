@@ -23,12 +23,17 @@ spec:
         ports:
           web:
             port: 80
-            redirectTo:
-              port: websecure
           websecure:
             port: 443
             tls:
               enabled: true
+
+        persistence:
+          enabled: true
+          name: data
+          size: 1Gi
+          storageClass: longhorn
+          path: /data
 
         ingressClass:
           enabled: true
