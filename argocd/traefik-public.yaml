@@ -29,6 +29,9 @@ spec:
             port: 443
             tls:
               enabled: true
+          websocket:
+            port: 8080
+            protocol: TCP
 
         ingressClass:
           enabled: true
