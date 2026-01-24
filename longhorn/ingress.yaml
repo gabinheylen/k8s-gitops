@@ -2,17 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: longhorn-ui
-  namespace: longhorn-system  
+  namespace: longhorn-system
 spec:
   ingressClassName: traefik-private
   rules:
-  - host: longhorn.local
+  - host: longhorn.ga-nan.ovh
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: longhorn-ui
+            name: longhorn-frontend
             port:
-              number: 8000
+              number: 80
