@@ -14,8 +14,8 @@ data:
     domain=local
     
     # Entrées DNS personnalisées
-    address=/longhorn.local/192.168.1.230
-    address=/vaultwarden.local/192.168.1.230
+    address=/longhorn.lan/192.168.1.230
+    address=/vaultwarden.lan/192.168.1.230
     
     # Forward vers les DNS publics pour les autres domaines
     server=8.8.8.8
