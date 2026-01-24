@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: traefik-private
   rules:
-  - host: longhorn.lan
+  - host: longhorn.local
     http:
       paths:
       - path: /
