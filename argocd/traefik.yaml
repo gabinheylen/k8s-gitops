@@ -15,10 +15,13 @@ spec:
     helm:
       values: |
         deployment:
-          replicas: 1
+          replicas: 2
 
         service:
+          enabled: true
           type: LoadBalancer
+          annotations:
+            metallb.universe.tf/address-pool: lan-pool
 
         ports:
           web:
@@ -33,7 +36,8 @@ spec:
               
         ingressClass:
           enabled: true
-          isDefaultClass: true
+          name: traefik-private
+          isDefaultClass: false
 
         persistence:
           enabled: true
@@ -57,9 +61,6 @@ spec:
           - --providers.kubernetescrd
           - --providers.kubernetesingress
 
-          - --entrypoints.web.forwardedHeaders.insecure=true
-          - --entrypoints.websecure.forwardedHeaders.insecure=true
-
 
   destination:
     server: https://kubernetes.default.svc
@@ -71,4 +72,6 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+
+
 
