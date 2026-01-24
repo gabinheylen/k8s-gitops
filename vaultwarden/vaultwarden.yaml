@@ -45,7 +45,7 @@ spec:
         - name: WEBSOCKET_ENABLED
           value: "true"
         - name: SIGNUPS_ALLOWED
-          value: "false"          # Désactive la création de comptes publics
+          value: "false"
         - name: ADMIN_TOKEN
           valueFrom:
             secretKeyRef:
