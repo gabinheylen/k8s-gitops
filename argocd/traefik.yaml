@@ -19,9 +19,7 @@ spec:
 
         service:
           enabled: true
-          type: LoadBalancer
-          annotations:
-            metallb.universe.tf/address-pool: lan-pool
+          type: ClusterIP
 
         ports:
           web:

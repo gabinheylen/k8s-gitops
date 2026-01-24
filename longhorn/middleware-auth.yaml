@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: basic-auth
+  namespace: traefik-public
+type: Opaque
+data:
+  users: |
+    YWRtaW46JGFwcjEkbk1qNHhObVJsYkE9JGQ5S1JYWHNaLzZQMWdEMG1QLgoK  # admin:admin (changez ce mot de passe !)
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: basic-auth
+  namespace: traefik-public
+spec:
+  basicAuth:
+    users:
+      - "admin:$apr1$nMj4xNmRl$bE9$d9KRXWsZ/6P1gD0mP/"  # admin:admin
+    realm: "Longhorn Private Access"

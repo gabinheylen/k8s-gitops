@@ -4,9 +4,9 @@ metadata:
   name: longhorn-ui
   namespace: longhorn-system
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: longhorn-system-ip-whitelist@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: traefik-public-ip-filter@kubernetescrd,traefik-public-basic-auth@kubernetescrd
 spec:
-  ingressClassName: traefik-private
+  ingressClassName: traefik-public
   rules:
   - host: longhorn.ga-nan.ovh
     http:
