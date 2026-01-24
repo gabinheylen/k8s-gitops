@@ -44,6 +44,13 @@ spec:
           value: "https://vaultwarden.ga-nan.ovh"
         - name: WEBSOCKET_ENABLED
           value: "true"
+        - name: SIGNUPS_ALLOWED
+          value: "false"          # Désactive la création de comptes publics
+        - name: ADMIN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-admin-token
+              key: admin-token
         volumeMounts:
         - name: vaultwarden-data
           mountPath: /data
