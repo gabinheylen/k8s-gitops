@@ -6,14 +6,15 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/gabinheylen/k8s-gitops.git'
+    repoURL: https://github.com/gabinheylen/k8s-gitops.git
     targetRevision: main
-    path: 'argocd'
+    path: argocd
+    directory:
+      recurse: true
   destination:
-    server: 'https://kubernetes.default.svc'
-    namespace: default
+    server: https://kubernetes.default.svc
+    namespace: argocd
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-
