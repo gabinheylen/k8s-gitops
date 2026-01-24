@@ -21,7 +21,4 @@ spec:
             name: vaultwarden
             port:
               number: 80
-  tls:
-  - hosts:
-    - vaultwarden.ga-nan.ovh
-    secretName: vaultwarden-tls
+  
