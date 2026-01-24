@@ -7,15 +7,13 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-
   source:
-    repoURL: https://github.com/gabin-heylen/k8s-gitops.git
+    repoURL: https://github.com/gabinheylen/k8s-gitops.git
     targetRevision: main
     path: dns
   destination:
     server: https://kubernetes.default.svc
     namespace: dns
-
   syncPolicy:
     automated:
       prune: true
