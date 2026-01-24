@@ -107,11 +107,4 @@ spec:
   headers:
     customRequestHeaders:
       X-Forwarded-Proto: "https"
-      X-Forwarded-Host: "vaultwarden.ga-nan.ovh"
-      X-Forwarded-Port: "443"
-    customResponseHeaders:
-      Strict-Transport-Security: "max-age=31536000; includeSubDomains"
-      X-Content-Type-Options: "nosniff"
-      X-Frame-Options: "DENY"
-      X-XSS-Protection: "1; mode=block"
 
