@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dns-config
+  namespace: dns
+data:
+  dnsmasq.conf: |
+    # Configuration DNS local
+    port=53
+    domain-needed
+    bogus-priv
+    filterwin2k
+    expand-hosts
+    domain=local
+    
+    # Entrées DNS personnalisées
+    address=/longhorn.local/192.168.1.230
+    address=/vaultwarden.local/192.168.1.230
+    
+    # Forward vers les DNS publics pour les autres domaines
+    server=8.8.8.8
+    server=1.1.1.1
+    
+    # Log
+    log-queries
+    log-facility=/dev/stdout

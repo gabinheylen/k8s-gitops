@@ -3,12 +3,10 @@ kind: Ingress
 metadata:
   name: longhorn-ui
   namespace: longhorn-system
-  annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: traefik-public-ip-filter@kubernetescrd,traefik-public-basic-auth@kubernetescrd
 spec:
-  ingressClassName: traefik-public
+  ingressClassName: traefik-private
   rules:
-  - host: longhorn.ga-nan.ovh
+  - host: longhorn.local
     http:
       paths:
       - path: /
