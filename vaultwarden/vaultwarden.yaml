@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: vaultwarden
-        image: vaultwarden/server:1.35.0
+        image: vaultwarden/server:1.30.5
         ports:
         - containerPort: 80
           name: http
@@ -44,8 +44,6 @@ spec:
           value: "https://vaultwarden.ga-nan.ovh"
         - name: WEBSOCKET_ENABLED
           value: "true"
-        - name: WEBSOCKET_PATH
-          value: "/notifications/hub"
         - name: SIGNUPS_ALLOWED
           value: "false"
         - name: INVITATIONS_ALLOWED
