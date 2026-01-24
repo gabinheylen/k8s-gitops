@@ -1,0 +1,60 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik-public
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://traefik.github.io/charts
+    chart: traefik
+    targetRevision: 30.1.0
+    helm:
+      values: |
+        deployment:
+          replicas: 2
+
+        service:
+          enabled: true
+          type: LoadBalancer
+          annotations:
+            metallb.universe.tf/address-pool: public-pool
+
+        ports:
+          web:
+            port: 80
+            redirectTo:
+              port: websecure
+          websecure:
+            port: 443
+            tls:
+              enabled: true
+
+        ingressClass:
+          enabled: true
+          name: traefik-public
+          isDefaultClass: false
+
+        additionalArguments:
+          - --log.level=INFO
+          - --providers.kubernetescrd
+          - --providers.kubernetesingress
+
+        certificatesResolvers:
+          letsencrypt:
+            acme:
+              email: gabin0406heylen@gmail.com
+              storage: /data/acme.json
+              httpChallenge:
+                entryPoint: web
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: traefik-public
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

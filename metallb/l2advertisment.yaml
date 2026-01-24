@@ -8,3 +8,12 @@ metadata:
 spec:
   ipAddressPools:
   - lan-pool
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: l2-public
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - public-pool
