@@ -44,6 +44,8 @@ spec:
           value: "https://vaultwarden.ga-nan.ovh"
         - name: WEBSOCKET_ENABLED
           value: "true"
+        - name: WEBSOCKET_PATH
+          value: "/notifications/hub"
         - name: SIGNUPS_ALLOWED
           value: "false"
         - name: INVITATIONS_ALLOWED
