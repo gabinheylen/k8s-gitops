@@ -39,6 +39,7 @@ spec:
           - --log.level=INFO
           - --providers.kubernetescrd
           - --providers.kubernetesingress
+          - --providers.kubernetescrd.allowCrossNamespace=true
 
         certificatesResolvers:
           letsencrypt:
