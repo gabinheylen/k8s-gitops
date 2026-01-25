@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/gabin-heylen/k8s-gitops.git
-    targetRevision: HEAD
+    targetRevision: main
     path: cert-manager
   destination:
     server: https://kubernetes.default.svc
