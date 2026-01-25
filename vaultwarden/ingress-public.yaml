@@ -7,8 +7,6 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
     traefik.ingress.kubernetes.io/router.middlewares: vaultwarden-headers@kubernetescrd
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    cert-manager.io/issue-temporary-certificate: "true"
 spec:
   ingressClassName: traefik-public
   rules:
