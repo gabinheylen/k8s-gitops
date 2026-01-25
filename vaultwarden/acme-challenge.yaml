@@ -1,32 +1,21 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: vaultwarden-public
+  name: acme-challenge
   namespace: vaultwarden
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    traefik.ingress.kubernetes.io/router.middlewares: vaultwarden-headers@kubernetescrd
+    acme.cert-manager.io/http01-edit-in-place: "true"
 spec:
   ingressClassName: traefik-public
   rules:
   - host: vaultwarden.ga-nan.ovh
     http:
       paths:
-      - path: /
+      - path: /.well-known/acme-challenge
         pathType: Prefix
         backend:
           service:
             name: vaultwarden
             port:
               number: 80
-      - path: /notifications/hub
-        pathType: Prefix
-        backend:
-          service:
-            name: vaultwarden
-            port:
-              number: 80
-  tls:
-  - hosts:
-    - vaultwarden.ga-nan.ovh
-    secretName: vaultwarden-tls-cert
