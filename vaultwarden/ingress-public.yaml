@@ -6,10 +6,12 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
-    traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
-    traefik.ingress.kubernetes.io/router.tls.domains: "vaultwarden.ga-nan.ovh"
 spec:
   ingressClassName: traefik-public
+  tls:
+  - hosts:
+    - vaultwarden.ga-nan.ovh
+    secretName: vaultwarden-tls
   rules:
   - host: vaultwarden.ga-nan.ovh
     http:
