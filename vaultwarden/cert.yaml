@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vaultwarden-tls
+  namespace: vaultwarden
+spec:
+  secretName: vaultwarden-tls
+  dnsNames:
+  - vaultwarden.ga-nan.ovh
+  issuerRef:
+    name: selfsigned-issuer
+    kind: ClusterIssuer
