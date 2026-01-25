@@ -1,0 +1,8 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: vaultwarden-admin-basicauth
+  namespace: traefik-public
+spec:
+  basicAuth:
+    secret: vaultwarden-admin-auth
