@@ -1,0 +1,8 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: longhorn-admin-basicauth
+  namespace: longhorn-system
+spec:
+  basicAuth:
+    secret: longhorn-admin-auth
