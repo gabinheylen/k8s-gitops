@@ -37,14 +37,9 @@ spec:
           - --log.level=INFO
           - --providers.kubernetescrd
           - --providers.kubernetesingress
-
-        certificatesResolvers:
-          letsencrypt:
-            acme:
-              email: gabin0406heylen@gmail.com
-              storage: /data/acme.json
-              httpChallenge:
-                entryPoint: web
+          - --certificatesresolvers.letsencrypt.acme.email=gabin0406heylen@gmail.com
+          - --certificatesresolvers.letsencrypt.acme.storage=/data/acme.json
+          - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
 
   destination:
     server: https://kubernetes.default.svc
