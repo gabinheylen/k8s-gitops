@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vaultwarden
+  namespace: traefik-public
+spec:
+  type: ExternalName
+  externalName: vaultwarden.vaultwarden.svc.cluster.local
+  ports:
+  - port: 80
+    targetPort: 80
