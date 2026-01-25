@@ -40,8 +40,6 @@ spec:
           - --certificatesresolvers.letsencrypt.acme.email=gabin0406heylen@gmail.com
           - --certificatesresolvers.letsencrypt.acme.storage=/data/acme.json
           - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
-          - --entrypoints.websecure.proxyProtocol.trustedIPs=192.168.1.0/24
-          - --entrypoints.web.forwardedHeaders.trustedIPs=192.168.1.0/24
 
   destination:
     server: https://kubernetes.default.svc
