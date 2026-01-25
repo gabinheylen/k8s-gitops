@@ -6,9 +6,16 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
-    traefik.ingress.kubernetes.io/router.middlewares: vaultwarden-headers@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: vaultwarden-headers@vaultwarden
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/issue-temporary-certificate: "true"
+    acme.cert-manager.io/http01-edit-in-place: "true"
 spec:
   ingressClassName: traefik-public
+  tls:
+  - hosts:
+    - vaultwarden.ga-nan.ovh
+    secretName: vaultwarden-tls
   rules:
   - host: vaultwarden.ga-nan.ovh
     http:
@@ -20,7 +27,10 @@ spec:
             name: vaultwarden
             port:
               number: 80
-  tls:
-  - hosts:
-    - vaultwarden.ga-nan.ovh
-    secretName: vaultwarden-tls
+      - path: /notifications/hub
+        pathType: Prefix
+        backend:
+          service:
+            name: vaultwarden
+            port:
+              number: 80
