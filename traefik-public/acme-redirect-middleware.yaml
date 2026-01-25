@@ -1,0 +1,19 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: acme-redirect-scheme
+  namespace: traefik-public
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: acme-bypass
+  namespace: traefik-public
+spec:
+  replacePathRegex:
+    regex: ^/.well-known/acme-challenge/(.*)
+    replacement: /.well-known/acme-challenge/$1
