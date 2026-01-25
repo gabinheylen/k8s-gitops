@@ -9,16 +9,22 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: cert-manager
-  namespace: cert-manager
+  namespace: kube-system
 spec:
   chart: cert-manager
   repo: https://charts.jetstack.io
   targetNamespace: cert-manager
   version: "v1.16.1"
-  valuesContent: |-
-    installCRDs: true
+  createNamespace: true
+  set:
+    installCRDs: "true"
     replicaCount: 2
-    
+    webhook:
+      replicaCount: 2
+    cainjector:
+      replicaCount: 2
+    prometheus:
+      enabled: false
     resources:
       requests:
         cpu: 10m
@@ -26,26 +32,3 @@ spec:
       limits:
         cpu: 100m
         memory: 128Mi
-    
-    webhook:
-      replicaCount: 2
-      resources:
-        requests:
-          cpu: 10m
-          memory: 32Mi
-        limits:
-          cpu: 100m
-          memory: 128Mi
-    
-    cainjector:
-      replicaCount: 2
-      resources:
-        requests:
-          cpu: 10m
-          memory: 32Mi
-        limits:
-          cpu: 100m
-          memory: 128Mi
-    
-    prometheus:
-      enabled: false

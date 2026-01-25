@@ -6,8 +6,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/gabinheylen/k8s-gitops.git
-    targetRevision: main
+    repoURL: https://github.com/gabin-heylen/k8s-gitops.git
+    targetRevision: HEAD
     path: cert-manager
   destination:
     server: https://kubernetes.default.svc
@@ -17,5 +17,12 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
-    - ServerSideApply=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
