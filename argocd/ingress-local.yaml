@@ -5,6 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: traefik-private
   rules:
