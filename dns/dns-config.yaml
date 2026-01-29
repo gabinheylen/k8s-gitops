@@ -12,9 +12,9 @@ data:
     filterwin2k
     
     # Entrées DNS personnalisées
-    address=/longhorn.local/192.168.1.230
-    address=/vaultwarden.local/192.168.1.230
-    address=/argocd.local/192.168.1.230
+    address=/longhorn.local/192.168.1.225
+    address=/vaultwarden.local/192.168.1.225
+    address=/argocd.local/192.168.1.225
     
     # Forward vers les DNS publics pour les autres domaines
     server=8.8.8.8
