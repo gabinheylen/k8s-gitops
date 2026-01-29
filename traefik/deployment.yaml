@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik-local
+  namespace: traefik
+  labels:
+    app: traefik-local
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefik-local
+  template:
+    metadata:
+      labels:
+        app: traefik-local
+    spec:
+      serviceAccountName: traefik
+      containers:
+      - name: traefik
+        image: traefik:v3.1.2
+        args:
+        - --global.checknewversion
+        - --global.sendanonymoususage
+        - --entrypoints.metrics.address=:9100/tcp
+        - --entrypoints.traefik.address=:9000/tcp
+        - --entrypoints.web.address=:80/tcp
+        - --entrypoints.websecure.address=:8443/tcp
+        - --api.dashboard=true
+        - --ping=true
+        - --metrics.prometheus=true
+        - --metrics.prometheus.entrypoint=metrics
+        - --providers.kubernetescrd
+        - --providers.kubernetesingress
+        - --entrypoints.websecure.http.tls=true
+        - --log.level=INFO
+        - --accesslog=true
+        ports:
+        - name: metrics
+          containerPort: 9100
+        - name: traefik
+          containerPort: 9000
+        - name: web
+          containerPort: 80
+        - name: websecure
+          containerPort: 8443
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: traefik
+      - name: tmp
+        emptyDir: {}

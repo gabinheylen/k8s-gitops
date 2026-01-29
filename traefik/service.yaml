@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  selector:
+    app: traefik-local
+  ports:
+  - name: web
+    port: 80
+    targetPort: 80
+    nodePort: 30081
+  - name: websecure
+    port: 443
+    targetPort: 8443
+    nodePort: 30444
+  type: NodePort
