@@ -4,7 +4,7 @@
 
 Architecture réseau avec deux Traefik séparés pour des usages distincts :
 - **Traefik Public** : Services exposés sur internet (Vaultwarden)
-- **Traefik Private** : Services locaux uniquement (.local)
+- **Traefik Private** : Services locaux uniquement (.lan)
 
 ## 🏗️ Configuration Réseau
 
@@ -25,17 +25,17 @@ Pool LAN    : 192.168.1.230-192.168.1.235 (pour Traefik Private)
 - **IP** : 192.168.1.230-192.168.1.235
 - **Usage** : Services locaux via DNS (192.168.1.221)
 - **Services** :
-  - ArgoCD : `http://argocd.local`
-  - Longhorn UI : `http://longhorn.local` (BasicAuth)
-  - Vaultwarden local : `http://vaultwarden.local`
+  - ArgoCD : `http://argocd.lan`
+  - Longhorn UI : `http://longhorn.lan` (BasicAuth)
+  - Vaultwarden local : `http://vaultwarden.lan`
 
 ## 🔧 Configuration DNS
 
 Votre serveur DNS (192.168.1.221) doit résoudre :
 ```
-argocd.local        -> 192.168.1.230
-longhorn.local      -> 192.168.1.230
-vaultwarden.local   -> 192.168.1.230
+argocd.lan        -> 192.168.1.230
+longhorn.lan      -> 192.168.1.230
+vaultwarden.lan   -> 192.168.1.230
 ```
 
 ## 📁 Fichiers d'ingress créés/modifiés
@@ -85,8 +85,9 @@ kubectl describe ingress <nom> -n <namespace>
 
 ### Tester la résolution DNS
 ```bash
-nslookup argocd.local 192.168.1.221
-nslookup longhorn.local 192.168.1.221
+nslookup argocd.lan 192.168.1.221
+nslookup longhorn.lan 192.168.1.221
+nslookup vaultwarden.lan 192.168.1.221
 ```
 
 ### Logs Traefik

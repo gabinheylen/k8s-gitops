@@ -5,11 +5,11 @@ metadata:
   namespace: longhorn-system
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
-    traefik.ingress.kubernetes.io/router.middlewares: longhorn-admin-basicauth@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: longhorn-system-longhorn-admin-basicauth@kubernetescrd
 spec:
   ingressClassName: traefik-private
   rules:
-  - host: longhorn.local
+  - host: longhorn.lan
     http:
       paths:
       - path: /
