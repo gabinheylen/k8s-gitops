@@ -1,0 +1,10 @@
+http:
+  server_host: 0.0.0.0
+  server_port: 8123
+  cors_allowed_origins:
+    - https://ha.ga-nan.ovh
+    - http://ha.ga-nan.ovh
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 10.244.0.0/16  # Kubernetes pod network
+    - 192.168.1.0/24  # Local network
