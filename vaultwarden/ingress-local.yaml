@@ -1,20 +1,20 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: argocd-local
-  namespace: argocd
+  name: vaultwarden-local
+  namespace: vaultwarden
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   ingressClassName: traefik-private
   rules:
-  - host: argocd.local
+  - host: vaultwarden.local
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: argocd-server
+            name: vaultwarden
             port:
               number: 80

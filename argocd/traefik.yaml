@@ -15,7 +15,7 @@ spec:
     helm:
       values: |
         deployment:
-          replicas: 2
+          replicas: 1
 
         service:
           enabled: true
@@ -26,11 +26,15 @@ spec:
         ports:
           web:
             port: 80
+          websecure:
+            port: 443
+            tls:
+              enabled: true
               
         ingressClass:
           enabled: true
           name: traefik-private
-          isDefaultClass: false
+          isDefaultClass: true
 
         persistence:
           enabled: true
@@ -40,11 +44,18 @@ spec:
           path: /data
 
         additionalArguments:
-          - --log.level=DEBUG
+          - --log.level=INFO
           - --accesslog=true
           - --providers.kubernetescrd
           - --providers.kubernetesingress
+          - --entrypoints.websecure.http.tls.options=default
 
+        tlsOptions:
+          default:
+            minVersion: "VersionTLS12"
+            cipherSuites:
+              - "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+              - "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
 
   destination:
     server: https://kubernetes.default.svc

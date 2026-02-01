@@ -1,20 +1,21 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: argocd-local
-  namespace: argocd
+  name: longhorn-ui-local
+  namespace: longhorn-system
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: longhorn-admin-basicauth@kubernetescrd
 spec:
   ingressClassName: traefik-private
   rules:
-  - host: argocd.local
+  - host: longhorn.local
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: argocd-server
+            name: longhorn-frontend
             port:
               number: 80
