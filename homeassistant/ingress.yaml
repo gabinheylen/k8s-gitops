@@ -10,10 +10,10 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: traefik-public
-  tls:
-  - hosts:
-    - ha.ga-nan.ovh
-    secretName: homeassistant-tls
+  # tls:
+  # - hosts:
+  #   - ha.ga-nan.ovh
+  #   secretName: homeassistant-tls
   rules:
   - host: ha.ga-nan.ovh
     http:
