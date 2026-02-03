@@ -5,32 +5,7 @@ metadata:
   labels:
     pod-security.kubernetes.io/enforce: restricted
 ---
-apiVersion: helm.cattle.io/v1
-kind: HelmChart
-metadata:
-  name: cert-manager
-  namespace: cert-manager
-spec:
-  chart: cert-manager
-  repo: https://charts.jetstack.io
-  targetNamespace: cert-manager
-  version: "v1.16.1"
-  set:
-    installCRDs: "true"
-    global.leaderElection.namespace: cert-manager
-    securityContext:
-      fsGroup: 1001
-      runAsNonRoot: true
-      runAsUser: 1001
-    webhook:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 65532
-    cainjector:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 65532
-    startupapicheck:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 65532
+# Cert Manager is already installed via direct kubectl apply
+# This file just ensures namespace exists for ArgoCD tracking
+# The actual cert-manager components are managed outside GitOps
+# to avoid HelmChart CRD issues
