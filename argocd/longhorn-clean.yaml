@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: 'https://github.com/gabinheylen/k8s-gitops.git'
     targetRevision: main
-    path: 'longhorn-clean/core'
+    path: 'longhorn/core'
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: longhorn-system
@@ -33,7 +33,7 @@ spec:
   source:
     repoURL: 'https://github.com/gabinheylen/k8s-gitops.git'
     targetRevision: main
-    path: 'longhorn-clean/ingress'
+    path: 'longhorn/ingress'
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: longhorn-system
