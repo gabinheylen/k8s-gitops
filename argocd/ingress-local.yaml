@@ -6,7 +6,7 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
-  ingressClassName: traefik-private
+  ingressClassName: traefik-public
   rules:
   - host: argocd.lan
     http:
