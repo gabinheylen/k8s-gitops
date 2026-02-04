@@ -3,6 +3,8 @@ kind: IngressRoute
 metadata:
   name: longhorn-ui
   namespace: longhorn-system
+  annotations:
+    argocd.argoproj.io/sync-options: CreateNamespace=false
 spec:
   entryPoints:
   - web
