@@ -1,0 +1,13 @@
+apiVersion: longhorn.io/v1beta2
+kind: BackupTarget
+metadata:
+  name: nfs-backup
+  namespace: longhorn-system
+spec:
+  backupTargetURL: nfs://192.168.1.147/longhorn-backups
+  credentialSecret: nfs-backup-secret
+  pollInterval: "5m0s"
+  # Backup retention policy
+  backupTargetName: nfs-backup
+  # Optional: Add backup compression
+  # backupCompressionMethod: "lz4"
