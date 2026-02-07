@@ -12,7 +12,7 @@ spec:
     helm:
       values: |
         deployment:
-          replicas: 2
+          replicas: 1
 
         service:
           enabled: true
